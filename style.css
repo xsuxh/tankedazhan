@@ -1,0 +1,228 @@
+:root {
+  --cyan: #00e5ff;
+  --magenta: #ff2bd6;
+  --yellow: #ffd400;
+  --green: #39ff14;
+  --panel-bg: rgba(10, 16, 28, 0.72);
+  --panel-border: rgba(0, 229, 255, 0.22);
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; height: 100%; width: 100%; }
+body {
+  font-family: 'Rajdhani', system-ui, sans-serif;
+  cursor: none;
+}
+.font-display { font-family: 'Orbitron', sans-serif; }
+.font-mono { font-family: 'Rajdhani', monospace; letter-spacing: 0.02em; }
+
+#gameCanvas {
+  display: block;
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  background: transparent;
+  z-index: 0;
+}
+
+/* 毛玻璃面板 */
+.glass-panel {
+  background: var(--panel-bg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--panel-border);
+  border-radius: 10px;
+  box-shadow: 0 0 24px rgba(0, 229, 255, 0.08), inset 0 1px 0 rgba(255,255,255,0.05);
+}
+
+/* UIverse 渐变按钮（作用域类，避免污染原生 button） */
+.grad-btn {
+  align-items: center;
+  background-image: linear-gradient(144deg, #af40ff, #5b42f3 50%, #00ddeb);
+  border: 0;
+  border-radius: 8px;
+  box-shadow: rgba(151, 65, 252, 0.2) 0 15px 30px -5px;
+  box-sizing: border-box;
+  color: #ffffff;
+  display: flex;
+  font-size: 18px;
+  justify-content: center;
+  line-height: 1em;
+  max-width: 100%;
+  min-width: 140px;
+  padding: 3px;
+  text-decoration: none;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: all 0.3s;
+  font-family: 'Orbitron', sans-serif;
+  font-weight: 700;
+}
+.grad-btn:active, .grad-btn:hover { outline: 0; }
+.grad-btn > span {
+  background-color: rgb(5, 6, 45);
+  padding: 16px 24px;
+  border-radius: 6px;
+  width: 100%;
+  height: 100%;
+  transition: 300ms;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+.grad-btn:hover > span { background: none; }
+.grad-btn:active { transform: scale(0.9); }
+
+/* 设置齿轮按钮（游戏中） */
+#hudSettingsBtn {
+  background: var(--panel-bg);
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--panel-border);
+  color: var(--cyan);
+  transition: all 0.25s;
+}
+#hudSettingsBtn:hover {
+  color: #fff;
+  border-color: var(--cyan);
+  box-shadow: 0 0 18px rgba(0, 229, 255, 0.4);
+  transform: rotate(40deg);
+}
+
+/* 菜单按钮 */
+.menu-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  padding: 0.85rem 1.5rem;
+  font-family: 'Orbitron', sans-serif;
+  font-weight: 700;
+  font-size: 0.95rem;
+  letter-spacing: 0.08em;
+  color: var(--cyan);
+  background: rgba(0, 229, 255, 0.06);
+  border: 1px solid rgba(0, 229, 255, 0.4);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  text-transform: uppercase;
+}
+.menu-btn:hover {
+  background: rgba(0, 229, 255, 0.15);
+  color: #fff;
+  box-shadow: 0 0 24px rgba(0, 229, 255, 0.4);
+  transform: translateY(-2px);
+}
+.menu-btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  padding: 0.7rem 1.5rem;
+  font-family: 'Orbitron', sans-serif;
+  font-weight: 500;
+  font-size: 0.85rem;
+  color: rgba(255,255,255,0.6);
+  background: transparent;
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.menu-btn-secondary:hover { color: #fff; border-color: rgba(255,255,255,0.4); }
+
+kbd.kbd {
+  display: inline-block;
+  padding: 2px 8px;
+  font-family: 'Orbitron', monospace;
+  font-size: 11px;
+  color: var(--cyan);
+  background: rgba(0,229,255,0.1);
+  border: 1px solid rgba(0,229,255,0.3);
+  border-radius: 4px;
+}
+
+/* 标题故障 */
+.glitch-title {
+  position: relative;
+  color: #fff;
+  text-shadow: 0 0 30px rgba(0, 229, 255, 0.5);
+}
+.glitch-title::before, .glitch-title::after {
+  content: attr(data-text);
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.glitch-title::before { color: var(--magenta); transform: translate(2px, 0); mix-blend-mode: screen; clip-path: inset(0 0 55% 0); animation: g1 4s infinite steps(1); }
+.glitch-title::after  { color: var(--cyan); transform: translate(-2px, 0); mix-blend-mode: screen; clip-path: inset(50% 0 0 0); animation: g2 4s infinite steps(1); }
+@keyframes g1 { 0%,92%,100%{transform:translate(2px,0)} 93%{transform:translate(5px,-1px)} 96%{transform:translate(-2px,1px)} }
+@keyframes g2 { 0%,92%,100%{transform:translate(-2px,0)} 93%{transform:translate(-4px,1px)} 96%{transform:translate(3px,-1px)} }
+
+/* 武器槽 */
+.weapon-slot {
+  width: 64px; height: 56px;
+  border-radius: 8px;
+  background: rgba(10,16,28,0.7);
+  border: 1px solid rgba(255,255,255,0.12);
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 2px; transition: all 0.2s;
+}
+.weapon-slot.active {
+  border-color: var(--cyan);
+  box-shadow: 0 0 16px rgba(0,229,255,0.4);
+  background: rgba(0,229,255,0.1);
+}
+.weapon-slot .wk { font-family: 'Orbitron', monospace; font-size: 9px; color: var(--cyan); }
+.weapon-slot .wn { font-size: 10px; color: #fff; text-align: center; line-height: 1.1; }
+.weapon-slot .cd { position: absolute; bottom: 0; left: 0; right: 0; height: 3px; background: var(--cyan); }
+
+/* 技能槽 */
+.skill-slot {
+  width: 56px; height: 56px;
+  border-radius: 50%;
+  background: rgba(10,16,28,0.7);
+  border: 1px solid rgba(255,255,255,0.15);
+  display: flex; align-items: center; justify-content: center;
+  position: relative; transition: all 0.2s;
+}
+.skill-slot.ready { border-color: var(--magenta); box-shadow: 0 0 14px rgba(255,43,214,0.35); }
+.skill-slot .sk-key { position: absolute; top: -6px; left: -6px; font-family: 'Orbitron', monospace; font-size: 9px; background: #000; border: 1px solid rgba(255,255,255,0.2); border-radius: 4px; padding: 0 4px; color: #fff; }
+.skill-slot svg { color: #fff; opacity: 0.8; }
+.skill-slot.ready svg { color: var(--magenta); opacity: 1; }
+.skill-cd { position: absolute; inset: 0; border-radius: 50%; background: rgba(0,0,0,0.6); display: flex; align-items: center; justify-content: center; font-family: 'Orbitron', monospace; font-size: 12px; color: #fff; }
+
+/* 升级选项卡 */
+.upgrade-card {
+  width: 220px;
+  padding: 1.5rem 1rem;
+  border-radius: 12px;
+  background: rgba(10,16,28,0.85);
+  border: 1px solid rgba(255,255,255,0.12);
+  cursor: pointer;
+  transition: all 0.25s;
+  text-align: center;
+}
+.upgrade-card:hover {
+  border-color: var(--yellow);
+  box-shadow: 0 0 28px rgba(255,212,0,0.3);
+  transform: translateY(-4px);
+}
+.upgrade-card .uc-icon { margin: 0 auto 0.75rem; width: 48px; height: 48px; border-radius: 50%; background: rgba(255,212,0,0.12); border: 1px solid rgba(255,212,0,0.4); display: flex; align-items: center; justify-content: center; color: var(--yellow); }
+.upgrade-card .uc-name { font-family: 'Orbitron', sans-serif; font-weight: 700; color: #fff; margin-bottom: 0.4rem; }
+.upgrade-card .uc-desc { font-size: 12px; color: rgba(255,255,255,0.6); line-height: 1.4; }
+
+/* 显示工具类 */
+.flex { display: flex; }
+.items-center { align-items: center; }
+.justify-center { justify-content: center; }
+.hidden { display: none !important; }
+
+@media (prefers-reduced-motion: reduce) {
+  .glitch-title::before, .glitch-title::after { animation: none; }
+}
